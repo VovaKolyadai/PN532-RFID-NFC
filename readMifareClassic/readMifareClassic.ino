@@ -114,10 +114,8 @@ void loop(void) {
     }
     if(autorise)
       Serial.print("Autorise");
-    else
-      Serial.print("Closed");
+    
     Serial.println("");
-    autorise = false;
     // Wait 1 second before continuing
     delay(1000);
     Serial.println("");
@@ -127,6 +125,7 @@ void loop(void) {
     // PN532 probably timed out waiting for a card
     Serial.println("Timed out waiting for a card");
   }
+  Serial.print("Closed");
 
 }
 

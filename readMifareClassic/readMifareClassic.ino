@@ -117,6 +117,7 @@ void loop(void) {
     else
       Serial.print("Closed");
     Serial.println("");
+    autorise = false;
     // Wait 1 second before continuing
     delay(1000);
     Serial.println("");

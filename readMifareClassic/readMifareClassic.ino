@@ -83,10 +83,8 @@ void setup(void) {
 
 void loop(void) {
   uint8_t success;
-  uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
-  uint8_t uidAutorise[] = { 242, 151, 214, 213, 0, 0, 0 };  // Buffer to store the returned UID
-  uint8_t uidLength; 
-  bool autorise = true;                       // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+  uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
+  uint8_t uidLength;                      // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
 
   // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
   // 'uid' will be populated with the UID, and uidLength will indicate
@@ -103,17 +101,6 @@ void loop(void) {
       Serial.print(" 0x");Serial.print(uid[i], HEX);
     }
     Serial.println("");
-    for (int i = 0;  uidLength > i; i++)
-    {
-      if( uid[i] != uidAutorise[i] ) 
-      {
-        autorise = false;
-        //set your boolean flag here
-        break;
-      }
-    }
-    if(autorise)
-      Serial.print("Autorise");
     
     Serial.println("");
     // Wait 1 second before continuing
@@ -125,7 +112,6 @@ void loop(void) {
     // PN532 probably timed out waiting for a card
     Serial.println("Timed out waiting for a card");
   }
-  Serial.print("Closed");
 
 }
 

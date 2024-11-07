@@ -77,22 +77,27 @@ void setup(void) {
   Serial.print("Firmware ver. "); Serial.print((versiondata>>16) & 0xFF, DEC);
   Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);
   nfc.SAMConfig();
-  Serial.println("Waiting for an ISO14443A Card ...");
 }
 
-
-void loop(void) {
   uint8_t success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };
   uint8_t uidAutorise[] = { 242, 151, 214, 213, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength; 
-  bool autorise = true;                       // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+  bool autorise = true; 
 
+
+void loop(void) {
+ 
+  if(!success)
+  {
+    Serial.println("Closed");
+    Serial.println("Waiting for an ISO14443A Card ...");                    
+  }
+  // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
   // Wait for an ISO14443A type cards (Mifare, etc.).  When one is found
   // 'uid' will be populated with the UID, and uidLength will indicate
   // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
-
   if (success) {
     // Display some basic information about the card
     Serial.println("Found an ISO14443A card");
@@ -108,22 +113,25 @@ void loop(void) {
       if( uid[i] != uidAutorise[i] ) 
       {
         autorise = false;
+        Serial.println("Wrong card");
         //set your boolean flag here
         break;
+      }
+      else
+      {
+        autorise = true;
       }
     }
     if(autorise)
       Serial.println("Autorise");
 
     Serial.println("");
-    // Wait 1 second before continuing
-    delay(1000);
-    Serial.println("");
   }
   else
   {
     // PN532 probably timed out waiting for a card
     Serial.println("Timed out waiting for a card");
+    autorise = false;
   }
   delay(3000);
   Serial.println("Closed");
